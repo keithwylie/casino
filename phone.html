@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phone Check - Station D</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial Black', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            font-family: Arial, sans-serif;
+        }
+        
+        .phone-screen {
+            background: linear-gradient(145deg, #2c3e50, #34495e);
+            border: 8px solid #1a1a1a;
+            border-radius: 30px;
+            padding: 30px 20px;
+            margin: 30px auto;
+            max-width: 350px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .phone-header {
+            color: white;
+            font-size: 0.9em;
+            padding: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-family: Arial, sans-serif;
+        }
+        
+        .notification-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            min-height: 250px;
+        }
+        
+        .notification-icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+        }
+        
+        .notification-message {
+            color: white;
+            font-size: 1.4em;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            line-height: 1.5;
+        }
+        
+        .prize-notification {
+            animation: notificationPop 0.5s ease-out;
+        }
+        
+        @keyframes notificationPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .check-button {
+            background: linear-gradient(145deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 25px 50px;
+            font-size: 1.6em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+            text-transform: uppercase;
+            font-family: 'Arial Black', Arial, sans-serif;
+            margin-top: 30px;
+        }
+        
+        .check-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        
+        .check-button:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .check-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+        
+        .stat-box {
+            text-align: center;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+            font-family: Arial, sans-serif;
+        }
+        
+        .stat-value {
+            color: #667eea;
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+        
+        .start-button {
+            background: linear-gradient(145deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 20px 40px;
+            font-size: 1.5em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            margin: 20px;
+            transition: all 0.2s;
+        }
+        
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        
+        .instructions {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: left;
+            font-family: Arial, sans-serif;
+        }
+        
+        .instructions h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .instructions li {
+            margin: 8px 0;
+            color: #555;
+        }
+        
+        .reset-button {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 25px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 15px;
+            font-family: Arial, sans-serif;
+        }
+        
+        .reset-button:hover {
+            background: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📱 Phone Check 📱</h1>
+        <p class="subtitle">Station D - Check for Notifications!</p>
+        
+        <div class="instructions" id="instructions">
+            <h3>How to Play:</h3>
+            <ul>
+                <li>Press START to begin</li>
+                <li>Click "CHECK PHONE" to check for notifications</li>
+                <li>When you get a notification, collect a prize!</li>
+                <li>Keep checking - you never know when the next one arrives</li>
+            </ul>
+        </div>
+        
+        <button class="start-button" id="startBtn" onclick="startGame()">START GAME</button>
+        
+        <div id="phoneContainer" style="display: none;">
+            <div class="phone-screen">
+                <div class="phone-header">12:34 PM</div>
+                
+                <div class="notification-area" id="notificationArea">
+                    <div class="notification-icon" id="notificationIcon">📱</div>
+                    <div class="notification-message" id="notificationMsg">
+                        Check for notifications
+                    </div>
+                </div>
+            </div>
+            
+            <button class="check-button" id="checkBtn" onclick="checkPhone()">
+                CHECK PHONE
+            </button>
+        </div>
+        
+        <div class="stats" id="stats" style="display: none;">
+            <div class="stat-box">
+                <div class="stat-label">Times Checked</div>
+                <div class="stat-value" id="checks">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Notifications</div>
+                <div class="stat-value" id="notifications">0</div>
+            </div>
+        </div>
+        
+        <button class="reset-button" id="resetBtn" onclick="resetGame()" style="display: none;">Reset Game</button>
+    </div>
+    
+    <script>
+        let gameActive = false;
+        let checkCount = 0;
+        let notificationCount = 0;
+        let lastNotificationTime = 0;
+        
+        // VI schedule: variable intervals averaging ~30 seconds (adjustable)
+        // For web app, we'll use check-based intervals instead of pure time
+        const notificationSchedule = [3, 7, 12, 16, 21, 25, 31, 35, 41, 45, 52, 56, 63, 67, 74, 78, 85];
+        
+        function startGame() {
+            gameActive = true;
+            checkCount = 0;
+            notificationCount = 0;
+            lastNotificationTime = Date.now();
+            
+            document.getElementById('startBtn').style.display = 'none';
+            document.getElementById('instructions').style.display = 'none';
+            document.getElementById('phoneContainer').style.display = 'block';
+            document.getElementById('stats').style.display = 'flex';
+            document.getElementById('resetBtn').style.display = 'inline-block';
+            
+            resetPhoneDisplay();
+        }
+        
+        function checkPhone() {
+            if (!gameActive) return;
+            
+            // Check if button is disabled
+            const checkBtn = document.getElementById('checkBtn');
+            if (checkBtn.disabled) return;
+            
+            // Disable button during check
+            checkBtn.disabled = true;
+            
+            checkCount++;
+            document.getElementById('checks').textContent = checkCount;
+            
+            // Check if this check number should have a notification
+            if (notificationSchedule.includes(checkCount)) {
+                notificationCount++;
+                document.getElementById('notifications').textContent = notificationCount;
+                showNotification();
+            } else {
+                showNoNotification();
+            }
+        }
+        
+        function showNotification() {
+            const icon = document.getElementById('notificationIcon');
+            const msg = document.getElementById('notificationMsg');
+            const area = document.getElementById('notificationArea');
+            const checkBtn = document.getElementById('checkBtn');
+            
+            icon.textContent = '🎉';
+            msg.textContent = 'You have a notification!\nCollect your prize!';
+            msg.className = 'notification-message prize-notification';
+            
+            // Keep button disabled and message visible for 3 seconds
+            setTimeout(() => {
+                resetPhoneDisplay();
+                checkBtn.disabled = false;
+            }, 3000);
+        }
+        
+        function showNoNotification() {
+            const icon = document.getElementById('notificationIcon');
+            const msg = document.getElementById('notificationMsg');
+            const checkBtn = document.getElementById('checkBtn');
+            
+            icon.textContent = '🔔';
+            msg.textContent = 'No new notifications';
+            
+            setTimeout(() => {
+                resetPhoneDisplay();
+                checkBtn.disabled = false;
+            }, 1500);
+        }
+        
+        function resetPhoneDisplay() {
+            const icon = document.getElementById('notificationIcon');
+            const msg = document.getElementById('notificationMsg');
+            
+            icon.textContent = '📱';
+            msg.textContent = 'Check for notifications';
+            msg.className = 'notification-message';
+        }
+        
+        function resetGame() {
+            gameActive = false;
+            checkCount = 0;
+            notificationCount = 0;
+            
+            document.getElementById('checks').textContent = '0';
+            document.getElementById('notifications').textContent = '0';
+            
+            resetPhoneDisplay();
+            
+            document.getElementById('startBtn').style.display = 'inline-block';
+            document.getElementById('instructions').style.display = 'block';
+            document.getElementById('phoneContainer').style.display = 'none';
+            document.getElementById('stats').style.display = 'none';
+            document.getElementById('resetBtn').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
