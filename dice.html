@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice Roll - Station B</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial Black', Arial, sans-serif;
+            background: linear-gradient(135deg, #fc4a1a 0%, #f7b733 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #fc4a1a;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            font-family: Arial, sans-serif;
+        }
+        
+        .dice-table {
+            background: linear-gradient(145deg, #8b0000, #b22222);
+            border-radius: 20px;
+            padding: 40px 30px;
+            margin: 30px 0;
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.2);
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .dice-display {
+            width: 150px;
+            height: 150px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 6em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            transition: transform 0.1s;
+        }
+        
+        .dice-display.rolling {
+            animation: rollDice 0.5s ease-in-out;
+        }
+        
+        @keyframes rollDice {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(90deg) scale(1.1); }
+            50% { transform: rotate(180deg) scale(0.9); }
+            75% { transform: rotate(270deg) scale(1.1); }
+        }
+        
+        .status-message {
+            color: white;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-top: 20px;
+            min-height: 40px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .prize-message {
+            animation: celebrate 0.6s ease-in-out;
+            color: #ffd700;
+            font-size: 2em;
+        }
+        
+        @keyframes celebrate {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.2) rotate(-5deg); }
+            75% { transform: scale(1.2) rotate(5deg); }
+        }
+        
+        .roll-button {
+            background: linear-gradient(145deg, #2ecc71, #27ae60);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 25px 50px;
+            font-size: 1.8em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+            text-transform: uppercase;
+            font-family: 'Arial Black', Arial, sans-serif;
+        }
+        
+        .roll-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        
+        .roll-button:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .roll-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+        
+        .stat-box {
+            text-align: center;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+            font-family: Arial, sans-serif;
+        }
+        
+        .stat-value {
+            color: #fc4a1a;
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+        
+        .start-button {
+            background: linear-gradient(145deg, #fc4a1a, #f7b733);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 20px 40px;
+            font-size: 1.5em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            margin: 20px;
+            transition: all 0.2s;
+        }
+        
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        
+        .instructions {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: left;
+            font-family: Arial, sans-serif;
+        }
+        
+        .instructions h3 {
+            color: #fc4a1a;
+            margin-bottom: 10px;
+        }
+        
+        .instructions li {
+            margin: 8px 0;
+            color: #555;
+        }
+        
+        .reset-button {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 25px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 15px;
+            font-family: Arial, sans-serif;
+        }
+        
+        .reset-button:hover {
+            background: #c0392b;
+        }
+        
+        .dice-dots {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 10px;
+            width: 100px;
+            height: 100px;
+        }
+        
+        .dot {
+            width: 20px;
+            height: 20px;
+            background: #2c3e50;
+            border-radius: 50%;
+        }
+        
+        .dot.hidden {
+            visibility: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎲 Dice Roll 🎲</h1>
+        <p class="subtitle">Station B - Roll for Prizes!</p>
+        
+        <div class="instructions" id="instructions">
+            <h3>How to Play:</h3>
+            <ul>
+                <li>Press START to begin</li>
+                <li>Click "ROLL DICE" to roll</li>
+                <li>Roll a 6 to win a prize!</li>
+                <li>Keep rolling to win more</li>
+            </ul>
+        </div>
+        
+        <button class="start-button" id="startBtn" onclick="startGame()">START GAME</button>
+        
+        <div class="dice-table" id="table" style="display: none;">
+            <div class="dice-display" id="diceDisplay">
+                <div id="diceNumber">?</div>
+            </div>
+            
+            <button class="roll-button" id="rollBtn" onclick="rollDice()">
+                ROLL DICE
+            </button>
+            
+            <div class="status-message" id="statusMsg"></div>
+        </div>
+        
+        <div class="stats" id="stats" style="display: none;">
+            <div class="stat-box">
+                <div class="stat-label">Rolls</div>
+                <div class="stat-value" id="rolls">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Prizes Won</div>
+                <div class="stat-value" id="prizes">0</div>
+            </div>
+        </div>
+        
+        <button class="reset-button" id="resetBtn" onclick="resetGame()" style="display: none;">Reset Game</button>
+    </div>
+    
+    <script>
+        let gameActive = false;
+        let rollCount = 0;
+        let prizeCount = 0;
+        
+        function startGame() {
+            gameActive = true;
+            rollCount = 0;
+            prizeCount = 0;
+            
+            document.getElementById('startBtn').style.display = 'none';
+            document.getElementById('instructions').style.display = 'none';
+            document.getElementById('table').style.display = 'flex';
+            document.getElementById('stats').style.display = 'flex';
+            document.getElementById('resetBtn').style.display = 'inline-block';
+            
+            resetDiceDisplay();
+        }
+        
+        function rollDice() {
+            if (!gameActive) return;
+            
+            const rollBtn = document.getElementById('rollBtn');
+            rollBtn.disabled = true;
+            
+            rollCount++;
+            document.getElementById('rolls').textContent = rollCount;
+            
+            // Animate rolling
+            const diceDisplay = document.getElementById('diceDisplay');
+            diceDisplay.classList.add('rolling');
+            
+            // Show random numbers while rolling
+            let rollAnimation = setInterval(() => {
+                document.getElementById('diceNumber').textContent = Math.floor(Math.random() * 6) + 1;
+            }, 50);
+            
+            setTimeout(() => {
+                clearInterval(rollAnimation);
+                
+                // VR: 1/6 chance of winning (rolling a 6)
+                const result = Math.floor(Math.random() * 6) + 1;
+                document.getElementById('diceNumber').textContent = result;
+                
+                diceDisplay.classList.remove('rolling');
+                
+                if (result === 6) {
+                    prizeCount++;
+                    document.getElementById('prizes').textContent = prizeCount;
+                    showPrize();
+                } else {
+                    showNoPrize();
+                }
+                
+                rollBtn.disabled = false;
+            }, 500);
+        }
+        
+        function showPrize() {
+            const statusMsg = document.getElementById('statusMsg');
+            statusMsg.textContent = '🎉 YOU ROLLED A 6! Prize! 🎉';
+            statusMsg.className = 'status-message prize-message';
+            
+            setTimeout(() => {
+                statusMsg.textContent = '';
+                statusMsg.className = 'status-message';
+            }, 2000);
+        }
+        
+        function showNoPrize() {
+            const statusMsg = document.getElementById('statusMsg');
+            statusMsg.textContent = 'Try again!';
+            
+            setTimeout(() => {
+                statusMsg.textContent = '';
+            }, 1500);
+        }
+        
+        function resetDiceDisplay() {
+            document.getElementById('diceNumber').textContent = '?';
+            document.getElementById('diceDisplay').className = 'dice-display';
+            document.getElementById('statusMsg').textContent = '';
+        }
+        
+        function resetGame() {
+            gameActive = false;
+            rollCount = 0;
+            prizeCount = 0;
+            
+            document.getElementById('rolls').textContent = '0';
+            document.getElementById('prizes').textContent = '0';
+            
+            resetDiceDisplay();
+            
+            document.getElementById('startBtn').style.display = 'inline-block';
+            document.getElementById('instructions').style.display = 'block';
+            document.getElementById('table').style.display = 'none';
+            document.getElementById('stats').style.display = 'none';
+            document.getElementById('resetBtn').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

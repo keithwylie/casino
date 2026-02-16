@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vending Machine - Station C</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial Black', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            font-family: Arial, sans-serif;
+        }
+        
+        .vending-machine {
+            background: linear-gradient(145deg, #e63946, #d62828);
+            border-radius: 20px;
+            padding: 40px 30px;
+            margin: 30px 0;
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        
+        .machine-window {
+            background: rgba(255,255,255,0.1);
+            border: 4px solid rgba(255,255,255,0.3);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .status-message {
+            color: white;
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .timer-display {
+            color: rgba(255,255,255,0.8);
+            font-size: 1.2em;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .prize-display {
+            font-size: 4em;
+            animation: popIn 0.5s ease-out;
+        }
+        
+        @keyframes popIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        .shake {
+            animation: shake 0.3s ease-in-out;
+        }
+        
+        .purchase-button {
+            background: linear-gradient(145deg, #ffd700, #ffed4e);
+            color: #333;
+            border: none;
+            border-radius: 15px;
+            padding: 25px 50px;
+            font-size: 1.8em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+            text-transform: uppercase;
+            font-family: 'Arial Black', Arial, sans-serif;
+        }
+        
+        .purchase-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        
+        .purchase-button:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .purchase-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+        
+        .stat-box {
+            text-align: center;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+            font-family: Arial, sans-serif;
+        }
+        
+        .stat-value {
+            color: #667eea;
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+        
+        .start-button {
+            background: linear-gradient(145deg, #06d6a0, #05a578);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 20px 40px;
+            font-size: 1.5em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            margin: 20px;
+            transition: all 0.2s;
+        }
+        
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        
+        .instructions {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: left;
+            font-family: Arial, sans-serif;
+        }
+        
+        .instructions h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .instructions li {
+            margin: 8px 0;
+            color: #555;
+        }
+        
+        .reset-button {
+            background: #e63946;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 25px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 15px;
+            font-family: Arial, sans-serif;
+        }
+        
+        .reset-button:hover {
+            background: #d62828;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍫 Vending Machine 🍫</h1>
+        <p class="subtitle">Station C - Get Your Prize!</p>
+        
+        <div class="instructions" id="instructions">
+            <h3>How to Play:</h3>
+            <ul>
+                <li>Press START to begin</li>
+                <li>Click "MAKE PURCHASE" to try to get a prize</li>
+                <li>The machine restocks regularly - keep trying!</li>
+                <li>Track how many prizes you win</li>
+            </ul>
+        </div>
+        
+        <button class="start-button" id="startBtn" onclick="startGame()">START GAME</button>
+        
+        <div class="vending-machine" id="machine" style="display: none;">
+            <div class="machine-window" id="window">
+                <div class="status-message" id="statusMsg">Ready to vend!</div>
+                <div class="timer-display" id="timerDisplay"></div>
+            </div>
+            
+            <button class="purchase-button" id="purchaseBtn" onclick="attemptPurchase()">
+                MAKE PURCHASE
+            </button>
+        </div>
+        
+        <div class="stats" id="stats" style="display: none;">
+            <div class="stat-box">
+                <div class="stat-label">Attempts</div>
+                <div class="stat-value" id="attempts">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Prizes Won</div>
+                <div class="stat-value" id="prizes">0</div>
+            </div>
+        </div>
+        
+        <button class="reset-button" id="resetBtn" onclick="resetGame()" style="display: none;">Reset Game</button>
+    </div>
+    
+    <script>
+        let gameActive = false;
+        let lastPrizeTime = 0;
+        let attemptCount = 0;
+        let prizeCount = 0;
+        let startTime = 0;
+        const RESTOCK_INTERVAL = 30000; // 30 seconds in milliseconds
+        
+        function startGame() {
+            gameActive = true;
+            lastPrizeTime = Date.now();
+            startTime = Date.now();
+            attemptCount = 0;
+            prizeCount = 0;
+            
+            document.getElementById('startBtn').style.display = 'none';
+            document.getElementById('instructions').style.display = 'none';
+            document.getElementById('machine').style.display = 'block';
+            document.getElementById('stats').style.display = 'flex';
+            document.getElementById('resetBtn').style.display = 'inline-block';
+            
+            resetToNeutral();
+        }
+        
+        function attemptPurchase() {
+            if (!gameActive) return;
+            
+            // Check if button is disabled
+            const purchaseBtn = document.getElementById('purchaseBtn');
+            if (purchaseBtn.disabled) return;
+            
+            attemptCount++;
+            document.getElementById('attempts').textContent = attemptCount;
+            
+            const now = Date.now();
+            const timeSinceLastPrize = now - lastPrizeTime;
+            
+            if (timeSinceLastPrize >= RESTOCK_INTERVAL) {
+                // SUCCESS! Give prize
+                prizeCount++;
+                document.getElementById('prizes').textContent = prizeCount;
+                lastPrizeTime = now;
+                
+                showPrize();
+            } else {
+                // TOO SOON
+                showRestocking(timeSinceLastPrize);
+            }
+        }
+        
+        function showPrize() {
+            const window = document.getElementById('window');
+            const statusMsg = document.getElementById('statusMsg');
+            const timerDisplay = document.getElementById('timerDisplay');
+            const purchaseBtn = document.getElementById('purchaseBtn');
+            
+            // Disable button during prize display
+            purchaseBtn.disabled = true;
+            
+            window.style.background = 'linear-gradient(145deg, #06d6a0, #05a578)';
+            statusMsg.innerHTML = '🎉 PRIZE! 🎉';
+            statusMsg.className = 'status-message prize-display';
+            timerDisplay.textContent = 'You got one!';
+            
+            // Shake effect
+            window.classList.add('shake');
+            setTimeout(() => window.classList.remove('shake'), 300);
+            
+            // Reset display after 4 seconds and re-enable button
+            setTimeout(() => {
+                window.style.background = 'rgba(255,255,255,0.1)';
+                statusMsg.className = 'status-message';
+                resetToNeutral();
+                purchaseBtn.disabled = false;
+            }, 4000);
+        }
+        
+        function showRestocking(timeSinceLastPrize) {
+            const window = document.getElementById('window');
+            const statusMsg = document.getElementById('statusMsg');
+            const timerDisplay = document.getElementById('timerDisplay');
+            
+            window.style.background = 'rgba(255,255,255,0.05)';
+            statusMsg.textContent = '⏳ RESTOCKING...';
+            timerDisplay.textContent = 'Try again soon!';
+            
+            // Shake effect
+            window.classList.add('shake');
+            setTimeout(() => window.classList.remove('shake'), 300);
+            
+            // Reset display after 1.5 seconds
+            setTimeout(() => {
+                window.style.background = 'rgba(255,255,255,0.1)';
+                resetToNeutral();
+            }, 1500);
+        }
+        
+        function resetToNeutral() {
+            const statusMsg = document.getElementById('statusMsg');
+            const timerDisplay = document.getElementById('timerDisplay');
+            
+            statusMsg.textContent = 'VENDING MACHINE';
+            timerDisplay.textContent = 'Press button to purchase';
+        }
+        
+        function resetGame() {
+            gameActive = false;
+            lastPrizeTime = 0;
+            attemptCount = 0;
+            prizeCount = 0;
+            
+            document.getElementById('attempts').textContent = '0';
+            document.getElementById('prizes').textContent = '0';
+            document.getElementById('statusMsg').textContent = 'VENDING MACHINE';
+            document.getElementById('timerDisplay').textContent = 'Press button to purchase';
+            
+            document.getElementById('startBtn').style.display = 'inline-block';
+            document.getElementById('instructions').style.display = 'block';
+            document.getElementById('machine').style.display = 'none';
+            document.getElementById('stats').style.display = 'none';
+            document.getElementById('resetBtn').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
